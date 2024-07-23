@@ -21,7 +21,6 @@ public class Sorteador {
     public void addName(String name) {
 
         names.add(name);
-        System.out.println(names);
 
     }
 
@@ -32,6 +31,18 @@ public class Sorteador {
         String[] itemsArray = list.split(separator);
 
         names = new ArrayList<>(Arrays.asList(itemsArray));
+
+    }
+
+    public void clarList() {
+
+        names.clear();
+
+    }
+
+    public List<String> printList() {
+
+        return names;
 
     }
 

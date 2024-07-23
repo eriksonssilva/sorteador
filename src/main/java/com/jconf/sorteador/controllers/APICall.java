@@ -3,6 +3,8 @@ package com.jconf.sorteador.controllers;
 import org.springframework.web.bind.annotation.*;
 import com.jconf.sorteador.services.Sorteador;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/")
 public class APICall {
@@ -29,6 +31,14 @@ public class APICall {
     public void adicionarLista(@RequestParam("list") String list) {
 
         picker.addList(list);
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @PostMapping("clear")
+    public void clear() {
+
+        picker.clarList();
 
     }
 }
