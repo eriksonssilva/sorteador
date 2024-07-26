@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class Sorteador {
+public class Drawer {
 
     List<String> names = new ArrayList<>();
 
-    public String namePicker() {
+    public String nameDrawer() {
 
         Random random = new Random();
         int randomIndex = random.nextInt(names.size());
@@ -18,13 +18,8 @@ public class Sorteador {
 
     }
 
-    public void addName(String name) {
 
-        names.add(name);
-
-    }
-
-    public void addList(String list) {
+    public void add(String list) {
 
         String separator = ",";
 
@@ -34,7 +29,7 @@ public class Sorteador {
 
     }
 
-    public void clarList() {
+    public void clearList() {
 
         names.clear();
 

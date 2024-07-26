@@ -11,10 +11,16 @@ body {
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
-    width: 200px;
+    width: 262px;
     max-height: 100px;
     overflow-y: scroll;
     text-align: left;
     border: 1px solid #000;
     padding: 10px;
+}
+
+#listInput {
+
+    width: 200px;
+
 }

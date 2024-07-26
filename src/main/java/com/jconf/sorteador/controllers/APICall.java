@@ -1,36 +1,26 @@
 package com.jconf.sorteador.controllers;
 
 import org.springframework.web.bind.annotation.*;
-import com.jconf.sorteador.services.Sorteador;
-
-import java.util.List;
+import com.jconf.sorteador.services.Drawer;
 
 @RestController
 @RequestMapping("/")
 public class APICall {
 
-    Sorteador picker = new Sorteador();
+    Drawer drawer = new Drawer();
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @GetMapping("sorteador")
-    public String sorteador() {
+    @GetMapping("drawer")
+    public String drawer() {
 
-        return "O sortudo foi: " + picker.namePicker();
+        return "O sortudo foi: " + drawer.nameDrawer();
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("adicionarUm")
-    public void adicionarUm(@RequestParam("single") String single) {
-
-        picker.addName(single);
-
-    }
-
-    @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("adicionarLista")
+    @PostMapping("add")
     public void adicionarLista(@RequestParam("list") String list) {
 
-        picker.addList(list);
+        drawer.add(list);
 
     }
 
@@ -38,7 +28,7 @@ public class APICall {
     @PostMapping("clear")
     public void clear() {
 
-        picker.clarList();
+        drawer.clearList();
 
     }
 }
