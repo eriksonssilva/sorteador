@@ -9,6 +9,6 @@ public class Participant {
 
     private String name;
     private String email;
-    private Boolean drawn;
+    private Boolean drawn = Boolean.FALSE;
 
 }

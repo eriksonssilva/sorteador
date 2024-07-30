@@ -18,7 +18,7 @@ document.getElementById("addButton").addEventListener("click", function() {
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                updateList(listInput.split(",").map(name => name.trim()));
+                updateList(listInput.split(";").map(name => name.trim().replace(",", " - ")));
                 console.log("Nome/Lista adicionada.");
             }
         };

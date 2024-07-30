@@ -7,44 +7,58 @@ import java.util.Random;
 
 public class Drawer {
 
-    private List<String> names;
+    private List<Participant> participants;
 
     public Drawer(){
 
-        this.names = new ArrayList<>();
+        this.participants = new ArrayList<>();
 
     }
 
     public String nameDrawer() {
 
         Random random = new Random();
-        int randomIndex = random.nextInt(names.size());
+        Participant participant;
 
-        return names.get(randomIndex);
+        do {
+            int randomIndex = random.nextInt(participants.size());
+            participant = participants.get(randomIndex);
+        } while (participant.getDrawn() == Boolean.TRUE);
+
+        participant.setDrawn(Boolean.TRUE);
+        return participant.getName();
 
     }
 
 
     public void setNames(String list) {
 
-        String separator = ",";
+        String[] participantDetails = list.split(";");
 
-        String[] itemsArray = list.split(separator);
+        for (String detail : participantDetails) {
 
-        names.addAll(Arrays.asList(itemsArray));
+            String[] details = detail.split(",");
+            if (details.length == 2) {
+                Participant participant = new Participant();
+                participant.setName(details[0]);
+                participant.setEmail(details[1]);
+                participants.add(participant);
+            }
+
+        }
 
     }
 
 
-    public List<String> getNames() {
+    public List<Participant> getNames() {
 
-        return names;
+        return participants;
 
     }
 
     public void clearList() {
 
-        names.clear();
+        participants.clear();
 
     }
 
