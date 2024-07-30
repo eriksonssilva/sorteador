@@ -7,7 +7,13 @@ import java.util.Random;
 
 public class Drawer {
 
-    List<String> names = new ArrayList<>();
+    private List<String> names;
+
+    public Drawer(){
+
+        this.names = new ArrayList<>();
+
+    }
 
     public String nameDrawer() {
 
@@ -19,25 +25,26 @@ public class Drawer {
     }
 
 
-    public void add(String list) {
+    public void setNames(String list) {
 
         String separator = ",";
 
         String[] itemsArray = list.split(separator);
 
-        names = new ArrayList<>(Arrays.asList(itemsArray));
+        names.addAll(Arrays.asList(itemsArray));
+
+    }
+
+
+    public List<String> getNames() {
+
+        return names;
 
     }
 
     public void clearList() {
 
         names.clear();
-
-    }
-
-    public List<String> printList() {
-
-        return names;
 
     }
 
