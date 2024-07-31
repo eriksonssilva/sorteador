@@ -3,6 +3,8 @@ package com.jconf.sorteador.controllers;
 import org.springframework.web.bind.annotation.*;
 import com.jconf.sorteador.services.Drawer;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/")
 public class APICall {
@@ -13,23 +15,16 @@ public class APICall {
     @PostMapping("add")
     public void setNames(@RequestParam("list") String list) {
 
-        drawer.setNames(list);
+        drawer.setParticipants(list);
 
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("get")
-    public void getNames() {
+    @PostMapping("drawer")
+    public String drawer(@RequestParam("nameQnt") Integer nameQnt) {
 
-        drawer.getNames();
+        return "O sortudo foi: " + drawer.nameDrawer(nameQnt);
 
-    }
-
-    @CrossOrigin(origins = "http://localhost:8080")
-    @GetMapping("drawer")
-    public String drawer() {
-
-        return "O sortudo foi: " + drawer.nameDrawer();
     }
 
 
@@ -38,6 +33,14 @@ public class APICall {
     public void clear() {
 
         drawer.clearList();
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping("update")
+    public List<String> update() {
+
+        return drawer.updateList();
 
     }
 }

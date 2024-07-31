@@ -1,33 +1,23 @@
 document.getElementById("drawer").addEventListener("click", function() {
+
+    addParticipants();
+
+    var nameQnt = document.getElementById("nameQuantity");
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/drawer", true);
+    xhr.open("POST", "/drawer", false);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            var randomName = xhr.responseText;
-            document.getElementById("drawResult").innerText = randomName;
+            document.getElementById("drawResult").innerText = xhr.responseText;
         }
     };
-    xhr.send();
+
+    xhr.send("nameQnt=" + encodeURIComponent(nameQnt.value));
+    nameQnt.value = "";
+    updateList();
 });
 
-document.getElementById("addButton").addEventListener("click", function() {
-    var listInput = document.getElementById("listInput").value;
-    if (listInput.trim() !== "") {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/add", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                updateList(listInput.split(";").map(name => name.trim().replace(",", " - ")));
-                console.log("Nome/Lista adicionada.");
-            }
-        };
-        xhr.send("list=" + encodeURIComponent(listInput));
-        document.getElementById("listInput").value = ""; // Clear input field
-    } else {
-        alert("Insira uma lista separada por vírgulas.");
-    }
-});
+
 
 document.getElementById("clearListButton").addEventListener("click", function() {
     var xhr = new XMLHttpRequest();
@@ -42,13 +32,36 @@ document.getElementById("clearListButton").addEventListener("click", function() 
     xhr.send();
 });
 
-function updateList(names) {
-    var nameListDiv = document.getElementById("list");
-    names.forEach(function(name) {
-        var nameItem = document.createElement("div");
-        nameItem.innerText = name;
-        nameListDiv.appendChild(nameItem);
-    });
+function addParticipants() {
+    var listInput = document.getElementById("listInput").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/add", false);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("list=" + encodeURIComponent(listInput));
+    document.getElementById("listInput").value = "";
+    updateList();
+}
+
+function updateList() {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/update", true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            var listDiv = document.getElementById("list");
+            listDiv.innerHTML = "";
+            data.forEach(function(item) {
+                var div = document.createElement("div");
+                div.textContent = item;
+                listDiv.appendChild(div);
+            });
+        } else if (xhr.readyState === 4) {
+            console.error("Error:", xhr.statusText);
+        }
+    };
+    xhr.send();
+
 }
 
 function clearNameList() {

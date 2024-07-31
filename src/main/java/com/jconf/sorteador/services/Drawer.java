@@ -1,13 +1,13 @@
 package com.jconf.sorteador.services;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class Drawer {
 
-    private List<Participant> participants;
+    private final List<Participant> participants;
+
 
     public Drawer(){
 
@@ -15,23 +15,29 @@ public class Drawer {
 
     }
 
-    public String nameDrawer() {
+    public List<String> nameDrawer(Integer nameQnt) {
 
         Random random = new Random();
+        List<String> drawnParticipants = new ArrayList<>();;
+
         Participant participant;
+        for (int i = 0; i < nameQnt; i++) {
 
-        do {
-            int randomIndex = random.nextInt(participants.size());
-            participant = participants.get(randomIndex);
-        } while (participant.getDrawn() == Boolean.TRUE);
+            do {
+                int randomIndex = random.nextInt(participants.size());
+                participant = participants.get(randomIndex);
+            } while (participant.getDrawn() == Boolean.TRUE);
+            drawnParticipants.add(participant.getName());
+            participant.setDrawn(Boolean.TRUE);
 
-        participant.setDrawn(Boolean.TRUE);
-        return participant.getName();
+        }
+
+        return drawnParticipants;
 
     }
 
 
-    public void setNames(String list) {
+    public void setParticipants(String list) {
 
         String[] participantDetails = list.split(";");
 
@@ -40,8 +46,8 @@ public class Drawer {
             String[] details = detail.split(",");
             if (details.length == 2) {
                 Participant participant = new Participant();
-                participant.setName(details[0]);
-                participant.setEmail(details[1]);
+                participant.setName(details[0].trim());
+                participant.setEmail(details[1].trim());
                 participants.add(participant);
             }
 
@@ -50,15 +56,34 @@ public class Drawer {
     }
 
 
-    public List<Participant> getNames() {
-
-        return participants;
-
-    }
-
     public void clearList() {
 
         participants.clear();
+
+    }
+
+    public List<String> updateList() {
+
+        List<String> drawList = new ArrayList<>();
+        String drawn;
+
+        for (Participant item : participants) {
+
+            if (item.getDrawn() == Boolean.TRUE) {
+
+                drawn = "Sorteado";
+
+            } else {
+
+                drawn = "Ok";
+
+            }
+
+            drawList.add(item.getName() + " - " + item.getEmail() + " - " + drawn);
+
+        }
+
+        return drawList;
 
     }
 
