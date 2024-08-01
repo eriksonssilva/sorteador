@@ -8,7 +8,6 @@ import lombok.Setter;
 public class Participant {
 
     private String name;
-    private String email;
     private Boolean drawn = Boolean.FALSE;
 
 }

@@ -20,16 +20,31 @@ public class Drawer {
         Random random = new Random();
         List<String> drawnParticipants = new ArrayList<>();;
 
+        Integer namesLeft = 0;
+        for (Participant participant : participants) {
+            if (!participant.getDrawn()) {
+                namesLeft++;
+            }
+        }
+
         Participant participant;
-        for (int i = 0; i < nameQnt; i++) {
 
-            do {
-                int randomIndex = random.nextInt(participants.size());
-                participant = participants.get(randomIndex);
-            } while (participant.getDrawn() == Boolean.TRUE);
-            drawnParticipants.add(participant.getName());
-            participant.setDrawn(Boolean.TRUE);
+        if (namesLeft > 0) {
 
+            if (nameQnt > namesLeft) {
+                nameQnt = namesLeft;
+            }
+            for (int i = 0; i < nameQnt; i++) {
+
+                do {
+                    int randomIndex = random.nextInt(participants.size());
+                    participant = participants.get(randomIndex);
+                } while (participant.getDrawn() == Boolean.TRUE);
+
+                drawnParticipants.add(participant.getName());
+                participant.setDrawn(Boolean.TRUE);
+
+            }
         }
 
         return drawnParticipants;
@@ -39,17 +54,13 @@ public class Drawer {
 
     public void setParticipants(String list) {
 
-        String[] participantDetails = list.split(";");
+        String[] names = list.split(",");
 
-        for (String detail : participantDetails) {
+        for (String name : names) {
 
-            String[] details = detail.split(",");
-            if (details.length == 2) {
-                Participant participant = new Participant();
-                participant.setName(details[0].trim());
-                participant.setEmail(details[1].trim());
-                participants.add(participant);
-            }
+            Participant participant = new Participant();
+            participant.setName(name);
+            participants.add(participant);
 
         }
 
@@ -79,7 +90,7 @@ public class Drawer {
 
             }
 
-            drawList.add(item.getName() + " - " + item.getEmail() + " - " + drawn);
+            drawList.add(item.getName() + " - " + drawn);
 
         }
 
