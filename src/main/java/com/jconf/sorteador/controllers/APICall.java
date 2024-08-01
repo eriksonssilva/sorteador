@@ -23,7 +23,7 @@ public class APICall {
     @PostMapping("drawer")
     public String drawer(@RequestParam("nameQnt") Integer nameQnt) {
 
-        return "O sortudo foi: " + drawer.nameDrawer(nameQnt);
+        return drawer.nameDrawer(nameQnt);
 
     }
 
@@ -41,6 +41,14 @@ public class APICall {
     public List<String> update() {
 
         return drawer.updateList();
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping("notDrawn")
+    public List<String> notDrawn() {
+
+        return drawer.getNotDrawnYet();
 
     }
 }

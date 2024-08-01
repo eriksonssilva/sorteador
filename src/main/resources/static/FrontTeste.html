@@ -1,24 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteador</title>
-</head>
-<body>
-<h1>Sorteador</h1>
-<textarea id="listInput" placeholder="Separe nome e email por Vírgulas e ; ao final."></textarea>
-<br>
-<input id="nameQuantity" placeholder="Quantos nomes Sortear?">
-<div id="drawResult"></div>
-<div id="list"></div>
-<br>
-<button id="drawer">Sortear</button>
-<br>
-<br>
-<button id="clearListButton">Limpar Lista</button>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sorteador</title>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
+    <div class="container">
+        <h1>Sorteador</h1>
+        <div class="input-section">
+            <textarea id="listInput" placeholder="Insira os nomes separados por vírgula. &#10Ex.: João,Maria,José,Lourdes"></textarea>
+            <input type="number" id="nameQuantity" placeholder="Quantos nomes Sortear?">
+        </div>
+        <div class="button-section">
+            <button id="drawer" class="primary-button">Sortear</button>
+            <button id="clearListButton" class="secondary-button">Limpar Lista</button>
+        </div>
+        <div id="rouletteContainer" class="roulette-container">
+            <div id="roulette" class="roulette"></div>
+        </div>
+        <div id="drawResult" class="result-section"></div>
+        <div id="list" class="list-section"></div>
+    </div>
 
-<script src="/js/ajax.js"></script>
-<link rel="stylesheet" href="/css/style.css">
-</body>
-</html>
+    <script src="/js/ajax.js"></script>
+    </body>
+    </html>

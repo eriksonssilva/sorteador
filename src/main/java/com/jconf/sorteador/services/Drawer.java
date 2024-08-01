@@ -7,6 +7,7 @@ import java.util.Random;
 public class Drawer {
 
     private final List<Participant> participants;
+    private List<String> notDrawnYet;
 
 
     public Drawer(){
@@ -15,10 +16,10 @@ public class Drawer {
 
     }
 
-    public List<String> nameDrawer(Integer nameQnt) {
+    public String nameDrawer(Integer nameQnt) {
 
         Random random = new Random();
-        List<String> drawnParticipants = new ArrayList<>();;
+        List<String> drawnParticipants = new ArrayList<>();
 
         Integer namesLeft = 0;
         for (Participant participant : participants) {
@@ -45,9 +46,14 @@ public class Drawer {
                 participant.setDrawn(Boolean.TRUE);
 
             }
-        }
 
-        return drawnParticipants;
+            return String.join(", ", drawnParticipants);
+
+        } else {
+
+            return "Todos os nomes já foram Sorteados!";
+
+        }
 
     }
 
@@ -58,8 +64,7 @@ public class Drawer {
 
         for (String name : names) {
 
-            Participant participant = new Participant();
-            participant.setName(name);
+            Participant participant = Participant.builder().name(name.trim()).build();
             participants.add(participant);
 
         }
@@ -75,14 +80,17 @@ public class Drawer {
 
     public List<String> updateList() {
 
+        notDrawnYet = new ArrayList<>();
         List<String> drawList = new ArrayList<>();
         String drawn;
 
-        for (Participant item : participants) {
+        for (Participant participant : participants) {
 
-            if (item.getDrawn() == Boolean.TRUE) {
+            notDrawnYet.add(participant.getName());
+            if (participant.getDrawn() == Boolean.TRUE) {
 
                 drawn = "Sorteado";
+                notDrawnYet.remove(participant.getName());
 
             } else {
 
@@ -90,11 +98,17 @@ public class Drawer {
 
             }
 
-            drawList.add(item.getName() + " - " + drawn);
+            drawList.add(participant.getName() + " - " + drawn);
 
         }
 
         return drawList;
+
+    }
+
+    public List<String> getNotDrawnYet() {
+
+        return notDrawnYet;
 
     }
 
