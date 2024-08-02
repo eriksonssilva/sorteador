@@ -44,11 +44,4 @@ public class APICall {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:8080")
-    @GetMapping("notDrawn")
-    public List<String> notDrawn() {
-
-        return drawer.getNotDrawnYet();
-
-    }
 }

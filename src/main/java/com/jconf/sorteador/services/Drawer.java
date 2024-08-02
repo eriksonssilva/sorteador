@@ -7,8 +7,6 @@ import java.util.Random;
 public class Drawer {
 
     private final List<Participant> participants;
-    private List<String> notDrawnYet;
-
 
     public Drawer(){
 
@@ -80,33 +78,18 @@ public class Drawer {
 
     public List<String> updateList() {
 
-        notDrawnYet = new ArrayList<>();
-        List<String> drawList = new ArrayList<>();
-        String drawn;
+        List<String> notDrawnYet = new ArrayList<>();
 
         for (Participant participant : participants) {
 
             notDrawnYet.add(participant.getName());
             if (participant.getDrawn() == Boolean.TRUE) {
 
-                drawn = "Sorteado";
                 notDrawnYet.remove(participant.getName());
-
-            } else {
-
-                drawn = "Ok";
 
             }
 
-            drawList.add(participant.getName() + " - " + drawn);
-
         }
-
-        return drawList;
-
-    }
-
-    public List<String> getNotDrawnYet() {
 
         return notDrawnYet;
 
