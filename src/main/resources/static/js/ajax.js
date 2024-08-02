@@ -54,53 +54,84 @@ function startRoulette(names, callback) {
     }, duration);
 }
 
+function triggerConfetti() {
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, {
+            particleCount,
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        }));
+        confetti(Object.assign({}, defaults, {
+            particleCount,
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        }));
+    }, 250);
+}
+
 let participantsAdded = false;
 
 document.getElementById("drawer").addEventListener("click", function() {
+
     if (!participantsAdded) {
         addParticipants();
         updateList();
     }
+
     var nameQnt = document.getElementById("nameQuantity");
 
-    // First, fetch the list of not drawn names
-    var notDrawnXhr = new XMLHttpRequest();
-    notDrawnXhr.open("GET", "/notDrawn", false);
-    notDrawnXhr.send();
+    // Clear previously drawn names
+    const drawResult = document.getElementById("drawResult");
+    drawResult.innerHTML = '';
 
-    if (notDrawnXhr.status === 200) {
-        const notDrawnNames = JSON.parse(notDrawnXhr.responseText);
+    const notDrawnNames = updateList();
 
-        // Now proceed with the drawing
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/drawer", false);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                const drawnNames = xhr.responseText.split(',').map(name => name.trim());
-                startRoulette(notDrawnNames, function() {
-                    const drawResult = document.getElementById("drawResult");
-                    drawResult.innerHTML = '';
-                    drawnNames.forEach(name => {
-                        const div = document.createElement('div');
-                        div.textContent = name;
-                        div.className = 'fade-in';
-                        drawResult.appendChild(div);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/drawer", false);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const drawnNames = xhr.responseText.split(',').map(name => name.trim());
+            startRoulette(notDrawnNames, function() {
+                // Create a new container for the names
+                const nameContainer = document.createElement('div');
+                nameContainer.className = 'name-container';
+                drawnNames.forEach(name => {
+                    const div = document.createElement('div');
+                    div.textContent = name;
+                    div.className = 'fade-in blurred name-item';
+                    div.addEventListener('click', function() {
+                        if (this.classList.contains('blurred')) {
+                            this.classList.remove('blurred');
+                        }
+                        triggerConfetti();
                     });
-                    updateList();
+                    nameContainer.appendChild(div);
                 });
-            }
-        };
-        xhr.send("nameQnt=" + encodeURIComponent(nameQnt.value));
-    } else {
-        console.error("Failed to fetch not drawn names");
-        alert("Error: Unable to fetch names for drawing.");
-    }
+                drawResult.appendChild(nameContainer);
+                updateList();
+            });
+        }
+    };
+    xhr.send("nameQnt=" + encodeURIComponent(nameQnt.value));
 });
 
 document.getElementById("clearListButton").addEventListener("click", function() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/clear", true);
+    xhr.open("POST", "/clear", false);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -121,40 +152,35 @@ function addParticipants() {
 }
 
 function updateList() {
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/update", false);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var data = JSON.parse(xhr.responseText);
-            var listDiv = document.getElementById("list");
-            listDiv.innerHTML = "";
-            data.forEach(function(item) {
-                var div = document.createElement("div");
-                div.textContent = item;
-                listDiv.appendChild(div);
-            });
-        } else if (xhr.readyState === 4) {
-            console.error("Error:", xhr.statusText);
-        }
-    };
     xhr.send();
+
+    if (xhr.status === 200) {
+        let notDrawnNames = JSON.parse(xhr.responseText);
+        var listInput = document.getElementById("listInput");
+        listInput.value = notDrawnNames;
+        return notDrawnNames;
+    }
+
 }
 
 function clearNameList() {
-    var listDiv = document.getElementById("list");
     var drawResultDiv = document.getElementById("drawResult");
+    var listInputDiv = document.getElementById("listInput");
+    participantsAdded = false;
 
-    // Add fade-out animation
-    Array.from(listDiv.children).forEach(child => {
-        child.className = 'fade-out';
-    });
+
     Array.from(drawResultDiv.children).forEach(child => {
         child.className = 'fade-out';
     });
 
     // Clear after animation
     setTimeout(() => {
-        listDiv.innerHTML = "";
         drawResultDiv.innerHTML = "";
+        listInputDiv.value = "";
     }, 500);
+
 }
+
