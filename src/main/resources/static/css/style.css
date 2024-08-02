@@ -132,3 +132,11 @@ button {
     font-weight: bold;
     color: #333;
 }
+
+.logos {
+    text-align: center;
+}
+
+.logo-jconfbr {
+    width: 100px;
+}
