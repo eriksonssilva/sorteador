@@ -103,24 +103,16 @@ button {
     margin: 5px;
     min-width: 100px;
     text-align: center;
+    cursor: pointer;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.blurred {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
 }
 
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
-}
-
-.fade-out {
-    animation: fadeOut 0.5s ease-out;
+.blurred:hover {
+    cursor: pointer;
 }
 
 .roulette-container {
@@ -149,11 +141,20 @@ button {
     color: #333;
 }
 
-.blurred {
-    filter: blur(5px);
-    transition: filter 0.3s ease;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-.blurred:hover {
-    cursor: pointer;
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease-out;
 }

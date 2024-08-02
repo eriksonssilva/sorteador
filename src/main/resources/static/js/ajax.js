@@ -116,8 +116,8 @@ document.getElementById("drawer").addEventListener("click", function() {
                     div.addEventListener('click', function() {
                         if (this.classList.contains('blurred')) {
                             this.classList.remove('blurred');
-                            triggerConfetti();
                         }
+                        triggerConfetti();
                     });
                     nameContainer.appendChild(div);
                 });
@@ -131,7 +131,7 @@ document.getElementById("drawer").addEventListener("click", function() {
 
 document.getElementById("clearListButton").addEventListener("click", function() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/clear", true);
+    xhr.open("POST", "/clear", false);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -167,22 +167,20 @@ function updateList() {
 }
 
 function clearNameList() {
-    var listDiv = document.getElementById("list");
     var drawResultDiv = document.getElementById("drawResult");
+    var listInputDiv = document.getElementById("listInput");
     participantsAdded = false;
 
-    // Add fade-out animation
-    Array.from(listDiv.children).forEach(child => {
-        child.className = 'fade-out';
-    });
+
     Array.from(drawResultDiv.children).forEach(child => {
         child.className = 'fade-out';
     });
 
     // Clear after animation
     setTimeout(() => {
-        listDiv.innerHTML = "";
         drawResultDiv.innerHTML = "";
+        listInputDiv.value = "";
     }, 500);
 
 }
+
