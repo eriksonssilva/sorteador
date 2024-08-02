@@ -63,7 +63,10 @@ document.getElementById("drawer").addEventListener("click", function() {
     }
     var nameQnt = document.getElementById("nameQuantity");
 
-    // First, fetch the list of not drawn names
+    // Clear previously drawn names
+    const drawResult = document.getElementById("drawResult");
+    drawResult.innerHTML = '';
+
     var notDrawnXhr = new XMLHttpRequest();
     notDrawnXhr.open("GET", "/notDrawn", false);
     notDrawnXhr.send();
@@ -71,7 +74,6 @@ document.getElementById("drawer").addEventListener("click", function() {
     if (notDrawnXhr.status === 200) {
         const notDrawnNames = JSON.parse(notDrawnXhr.responseText);
 
-        // Now proceed with the drawing
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/drawer", false);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -79,14 +81,19 @@ document.getElementById("drawer").addEventListener("click", function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 const drawnNames = xhr.responseText.split(',').map(name => name.trim());
                 startRoulette(notDrawnNames, function() {
-                    const drawResult = document.getElementById("drawResult");
-                    drawResult.innerHTML = '';
+                    // Create a new container for the names
+                    const nameContainer = document.createElement('div');
+                    nameContainer.className = 'name-container';
                     drawnNames.forEach(name => {
                         const div = document.createElement('div');
                         div.textContent = name;
-                        div.className = 'fade-in';
-                        drawResult.appendChild(div);
+                        div.className = 'fade-in blurred name-item';
+                        div.addEventListener('click', function() {
+                            this.classList.remove('blurred');
+                        });
+                        nameContainer.appendChild(div);
                     });
+                    drawResult.appendChild(nameContainer);
                     updateList();
                 });
             }
@@ -121,28 +128,25 @@ function addParticipants() {
 }
 
 function updateList() {
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/update", false);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var data = JSON.parse(xhr.responseText);
-            var listDiv = document.getElementById("list");
-            listDiv.innerHTML = "";
-            data.forEach(function(item) {
-                var div = document.createElement("div");
-                div.textContent = item;
-                listDiv.appendChild(div);
-            });
-        } else if (xhr.readyState === 4) {
-            console.error("Error:", xhr.statusText);
-        }
-    };
     xhr.send();
+
+    xhr.open("GET", "/notDrawn", false);
+    xhr.send();
+    if (xhr.status === 200) {
+        let notDrawnNames = JSON.parse(xhr.responseText);
+        var listInput = document.getElementById("listInput");
+        listInput.value = notDrawnNames;
+    }
+
 }
 
 function clearNameList() {
     var listDiv = document.getElementById("list");
     var drawResultDiv = document.getElementById("drawResult");
+    participantsAdded = false;
 
     // Add fade-out animation
     Array.from(listDiv.children).forEach(child => {
@@ -157,4 +161,5 @@ function clearNameList() {
         listDiv.innerHTML = "";
         drawResultDiv.innerHTML = "";
     }, 500);
+
 }
