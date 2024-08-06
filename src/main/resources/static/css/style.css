@@ -145,10 +145,6 @@ button {
     text-align: center;
 }
 
-.logo-jconfbr {
-    width: 100px;
-}
-
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
